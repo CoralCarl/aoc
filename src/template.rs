@@ -2,24 +2,26 @@ use utils::structure::Solution;
 use utils::parsing;
 
 #[derive(Default)]
-pub struct Day05 {
+pub struct DayDAY {
     data: String,
 }
 
-impl Day05 {
+impl DayDAY {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl Solution for Day05 {
-    fn part1(&mut self) -> Vec<String> {
-        vec![format!("Not implemented")]
+impl Solution for DayDAY {
+    fn part1(&mut self) -> String {
+        let result = "Not implemented";
+        format!("{}", result)
     }
-    fn part2(&mut self) -> Vec<String> {
-        vec![format!("Not implemented")]
+    fn part2(&mut self) -> String {
+        let result = "Not implemented";
+        format!("{}", result)
     }
     fn parse(&mut self) {
-        self.data = parsing::get_string(2015, 05);
+        self.data = parsing::get_string(YEAR, DAY);
     }
 }

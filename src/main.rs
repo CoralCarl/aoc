@@ -28,8 +28,8 @@ fn format_time(time: &Duration) -> String {
     s
 }
 
-fn print_result(part: usize, result: &[String], time: Duration) {
-    let mut result = result.iter();
+fn print_result(part: usize, result: &str, time: Duration) {
+    let mut result = result.lines();
 
     println!(
         "{} - Part {}: {}",
@@ -76,7 +76,7 @@ fn print_year(id: usize, year: &mut dyn Year) {
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();
-    let mut years: [(usize, Box<dyn Year>); 2] = [
+    let years: [(usize, Box<dyn Year>); 2] = [
         (2015, Box::new(Year2015::new())),
         (2023, Box::new(Year2023::new())),
     ];

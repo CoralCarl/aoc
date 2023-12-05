@@ -13,7 +13,7 @@ impl Day02 {
 }
 
 impl Solution for Day02 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut result = 0;
 
         'outer: for (i, game) in self.games.iter().enumerate() {
@@ -25,9 +25,9 @@ impl Solution for Day02 {
             result += i + 1;
         }
 
-        vec![format!("{}", result)]
+        format!("{}", result)
     }
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut result = 0;
 
         for game in self.games.iter() {
@@ -52,7 +52,7 @@ impl Solution for Day02 {
             result += max_set.blue * max_set.green * max_set.red;
         }
 
-        vec![format!("{}", result)]
+        format!("{}", result)
     }
     fn parse(&mut self) {
         let lines = parsing::get_lines(2023, 02);

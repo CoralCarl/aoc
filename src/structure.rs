@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 pub trait Solution {
-    fn part1(&mut self) -> Vec<String>;
-    fn part2(&mut self) -> Vec<String>;
+    fn part1(&mut self) -> String;
+    fn part2(&mut self) -> String;
     fn parse(&mut self);
 }
 

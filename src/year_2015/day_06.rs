@@ -15,7 +15,7 @@ impl Day06 {
 }
 
 impl Solution for Day06 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut grid = [[0; 1000]; 1000];
         for cmd in self.data.iter() {
             for row in &mut grid[cmd.start.y..=cmd.end.y] {
@@ -33,10 +33,10 @@ impl Solution for Day06 {
             .iter()
             .map(|row| row.iter().sum::<usize>())
             .sum::<usize>();
-        vec![format!("{}", result)]
+        format!("{}", result)
     }
 
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut grid = [[0; 1000]; 1000];
         for cmd in self.data.iter() {
             for row in &mut grid[cmd.start.y..=cmd.end.y] {
@@ -54,7 +54,7 @@ impl Solution for Day06 {
             .iter()
             .map(|row| row.iter().sum::<usize>())
             .sum::<usize>();
-        vec![format!("{}", result)]
+        format!("{}", result)
     }
 
     fn parse(&mut self) {

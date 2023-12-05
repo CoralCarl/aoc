@@ -13,11 +13,11 @@ impl Day07 {
 }
 
 impl Solution for Day07 {
-    fn part1(&mut self) -> Vec<String> {
-        vec![format!("Not implemented")]
+    fn part1(&mut self) -> String {
+        format!("Not implemented")
     }
-    fn part2(&mut self) -> Vec<String> {
-        vec![format!("Not implemented")]
+    fn part2(&mut self) -> String {
+        format!("Not implemented")
     }
     fn parse(&mut self) {
         self.data = parsing::get_string(2015, 07);

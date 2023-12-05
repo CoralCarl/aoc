@@ -13,24 +13,24 @@ impl Day02 {
 }
 
 impl Solution for Day02 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut paper = 0;
         
         for present in self.data.iter() {
             paper += present.surface() + present.slack();
         }
         
-        vec![format!("{}", paper)]
+        format!("{}", paper)
         
     }
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut ribbon = 0;
 
         for present in self.data.iter() {
             ribbon += present.ribbon() + present.bow();
         }
 
-        vec![format!("{}", ribbon)]
+        format!("{}", ribbon)
     }
     fn parse(&mut self) {
         let data: Vec<Vec<usize>> = parsing::get_numbers(2015, 2, "x");

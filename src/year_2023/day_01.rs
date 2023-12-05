@@ -13,7 +13,7 @@ impl Day01 {
 }
 
 impl Solution for Day01 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut nums: Vec<u32> = Vec::new();
         for line in &self.lines {
             let mut first: Option<u32> = None;
@@ -32,10 +32,10 @@ impl Solution for Day01 {
             nums.push(10 * first.unwrap() + last.unwrap());
         }
 
-        vec![format!("{}", nums.iter().sum::<u32>())]
+        format!("{}", nums.iter().sum::<u32>())
     }
 
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut nums: Vec<u32> = Vec::new();
 
         for line in self.lines.iter() {
@@ -69,7 +69,7 @@ impl Solution for Day01 {
             }
             nums.push(10 * first.unwrap() + last.unwrap());
         }
-        vec![format!("{}", nums.iter().sum::<u32>())]
+        format!("{}", nums.iter().sum::<u32>())
     }
 
     fn parse(&mut self) {

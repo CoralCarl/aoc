@@ -14,7 +14,7 @@ impl Day01 {
 }
 
 impl Solution for Day01 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut floor = 0;
         for c in self.data.chars() {
             match c {
@@ -23,9 +23,9 @@ impl Solution for Day01 {
                 _ => (),
             }
         }
-        vec![floor.to_string()]
+        floor.to_string()
     }
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut floor = 0;
         let mut i = 1;
         for c in self.data.chars() {
@@ -39,7 +39,7 @@ impl Solution for Day01 {
             }
             i += 1;
         }
-        vec![i.to_string()]
+        i.to_string()
     }
     fn parse(&mut self) {
         self.data = parsing::get_string(2015, 1);

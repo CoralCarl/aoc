@@ -15,7 +15,7 @@ impl Day05 {
 }
 
 impl Solution for Day05 {
-    fn part1(&mut self) -> Vec<String> {
+    fn part1(&mut self) -> String {
         let mut nice = 0;
         'lines: for s in self.data.iter() {
             let mut vowels = 0;
@@ -61,9 +61,9 @@ impl Solution for Day05 {
                 nice += 1;
             }
         }
-        vec![format!("{}", nice)]
+        format!("{}", nice)
     }
-    fn part2(&mut self) -> Vec<String> {
+    fn part2(&mut self) -> String {
         let mut nice = 0;
         'lines: for s in self.data.iter() {
             let s = s.chars().collect::<Vec<char>>();
@@ -82,7 +82,7 @@ impl Solution for Day05 {
                         pairs.insert(pair, i);
                     }
                 }
-                if !repeat && i < s.len()-2 && c == s[i + 2] {
+                if !repeat && i < s.len() - 2 && c == s[i + 2] {
                     repeat = true;
                 }
                 if repeat && found_overlap {
@@ -90,10 +90,10 @@ impl Solution for Day05 {
                     continue 'lines;
                 }
             }
-                // println!("{:?}: {:?}",s, pairs);
+            // println!("{:?}: {:?}",s, pairs);
         }
 
-        vec![format!("{}", nice)]
+        format!("{}", nice)
     }
     fn parse(&mut self) {
         self.data = parsing::get_lines(2015, 05);
