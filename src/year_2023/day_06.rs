@@ -29,43 +29,33 @@ impl Solution for Day06 {
 
         for (time, record) in times.zip(distances) {
             self.races.push(Race {
-                time: time.parse::<u64>().unwrap(),
-                distance: record.parse::<u64>().unwrap(),
+                time: time.parse::<f64>().unwrap(),
+                distance: record.parse::<f64>().unwrap(),
             });
         }
 
         let time = data[0]["Time:".len()..]
             .replace(" ", "")
-            .parse::<u64>()
+            .parse::<f64>()
             .unwrap();
         let distance = data[1]["Distance:".len()..]
             .replace(" ", "")
-            .parse::<u64>()
+            .parse::<f64>()
             .unwrap();
         self.race = Race { time, distance };
     }
 }
 
-fn zero_point(p: f64, q: f64) -> Vec<f64> {
-    let a = (p + (p.powi(2) - 4.0 * q).sqrt()) / 2.0;
-    let b = (p - (p.powi(2) - 4.0 * q).sqrt()) / 2.0;
-
-    if a < b {
-        vec![a, b]
-    } else {
-        vec![b, a]
-    }
-}
-
 #[derive(Default)]
 struct Race {
-    time: u64,
-    distance: u64,
+    time: f64,
+    distance: f64,
 }
 
 impl Race {
     fn win_chances(&self) -> u64 {
-        let zeros = zero_point(self.time as f64, self.distance as f64);
-        zeros[1].ceil() as u64 - zeros[0].floor() as u64 - 1
+        let a = (self.time + (self.time.powi(2) - 4.0 * self.distance).sqrt()) / 2.0;
+        let b = (self.time - (self.time.powi(2) - 4.0 * self.distance).sqrt()) / 2.0;
+        a.ceil() as u64 - b.floor() as u64 - 1
     }
 }
