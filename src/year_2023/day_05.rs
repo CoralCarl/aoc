@@ -28,6 +28,18 @@ impl Day05 {
             }
 
             category = map_set.out_type.as_str();
+
+            new_ranges.sort_by(|a, b| a.start.cmp(&b.start));
+            let mut i = 0;
+            while i < new_ranges.len() - 1 {
+                if new_ranges[i].end >= new_ranges[i + 1].start {
+                    new_ranges[i].end = new_ranges[i + 1].end;
+                    new_ranges.remove(i + 1);
+                } else {
+                    i += 1;
+                }
+            }
+
             ranges = new_ranges;
         }
 
@@ -66,7 +78,7 @@ impl Solution for Day05 {
 
         format!("{}", locations.iter().min().unwrap())
     }
-fn part2(&mut self) -> String {
+    fn part2(&mut self) -> String {
         let mut locations: Vec<i128> = Vec::new();
 
         for range in self.seeds.chunks(2) {
@@ -159,6 +171,7 @@ fn range_map(range: &Range<i128>, maps: &Vec<Map>) -> Vec<Range<i128>> {
     }
 
     done.append(&mut todo);
+
     done
 }
 
