@@ -6,7 +6,7 @@ use utils::structure::Solution;
 
 #[derive(Default)]
 pub struct Day05 {
-    seeds: Vec<u64>,
+    seeds: Vec<i128>,
     map_sets: HashMap<String, MapSet>,
 }
 
@@ -15,7 +15,27 @@ impl Day05 {
         Self::default()
     }
 
-    fn location(&self, value: u64) -> u64 {
+    fn range_location(&self, range: Range<i128>) -> i128 {
+        let mut category = "seed";
+        let mut ranges = vec![range];
+
+        while category != "location" {
+            let map_set = &self.map_sets[category];
+
+            let mut new_ranges: Vec<Range<i128>> = Vec::new();
+            for range in ranges {
+                new_ranges.append(&mut range_map(&range, &map_set.maps));
+            }
+
+            category = map_set.out_type.as_str();
+            ranges = new_ranges;
+        }
+
+        ranges.sort_by(|a, b| a.start.cmp(&b.start));
+        ranges[0].start
+    }
+
+    fn location(&self, value: i128) -> i128 {
         let mut category = "seed";
         let mut value = value;
 
@@ -38,7 +58,7 @@ impl Day05 {
 
 impl Solution for Day05 {
     fn part1(&mut self) -> String {
-        let mut locations: Vec<u64> = Vec::new();
+        let mut locations: Vec<i128> = Vec::new();
 
         for &seed in &self.seeds {
             locations.push(self.location(seed));
@@ -48,12 +68,10 @@ impl Solution for Day05 {
     }
 
     fn part2(&mut self) -> String {
-        let mut locations: Vec<u64> = Vec::new();
+        let mut locations: Vec<i128> = Vec::new();
 
         for range in self.seeds.chunks(2) {
-            for seed in range[0]..range[0] + range[1] {
-                locations.push(self.location(seed));
-            }
+            locations.push(self.range_location(range[0]..range[0] + range[1]));
         }
 
         format!("{}", locations.iter().min().unwrap())
@@ -61,13 +79,46 @@ impl Solution for Day05 {
 
     fn parse(&mut self) {
         let data = parsing::get_string(2023, 05);
+        let _data = "seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
+
+water-to-light map:
+88 18 7
+18 25 70
+
+light-to-temperature map:
+45 77 23
+81 45 19
+68 64 13
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+humidity-to-location map:
+60 56 37
+56 93 4";
 
         let mut blocks = data.split("\n\n");
 
         let (_, seeds) = blocks.next().unwrap().split_once(": ").unwrap();
         self.seeds = seeds
             .split_whitespace()
-            .map(|n| n.parse::<u64>().unwrap())
+            .map(|n| n.parse::<i128>().unwrap())
             .collect();
 
         while let Some(block) = blocks.next() {
@@ -81,8 +132,8 @@ impl Solution for Day05 {
             while let Some(line) = lines.next() {
                 let nums = line
                     .split_whitespace()
-                    .map(|x| x.parse::<u64>().unwrap())
-                    .collect::<Vec<u64>>();
+                    .map(|x| x.parse::<i128>().unwrap())
+                    .collect::<Vec<i128>>();
 
                 maps.push(Map {
                     range: nums[1]..nums[1] + nums[2],
@@ -90,18 +141,83 @@ impl Solution for Day05 {
                 });
             }
 
-            self.map_sets
-                .insert(in_type.to_string(), MapSet { out_type: out_type.to_string(), maps });
+            self.map_sets.insert(
+                in_type.to_string(),
+                MapSet {
+                    out_type: out_type.to_string(),
+                    maps,
+                },
+            );
         }
     }
 }
 
+#[derive(Debug)]
 struct Map {
-    range: Range<u64>,
-    delta: u64,
+    range: Range<i128>,
+    delta: i128,
 }
 
 struct MapSet {
     out_type: String,
     maps: Vec<Map>,
+}
+
+fn range_map(range: &Range<i128>, maps: &Vec<Map>) -> Vec<Range<i128>> {
+    let mut todo = vec![range.clone()];
+    let mut done: Vec<Range<i128>> = Vec::new();
+
+    for map in maps {
+        let mut remaining: Vec<Range<i128>> = Vec::new();
+
+        while let Some(range) = todo.pop() {
+            let left = range.start..range.end.min(map.range.start);
+            let right = range.start.max(map.range.end)..range.end;
+            let mid = range.start.max(map.range.start) + map.delta
+                ..range.end.min(map.range.end) + map.delta;
+
+            if left.start < left.end {
+                remaining.push(left);
+            }
+            if right.start < right.end {
+                remaining.push(right);
+            }
+            if mid.start < mid.end {
+                done.push(mid);
+            }
+        }
+        if remaining.is_empty() {
+            break;
+        }
+        todo = remaining;
+    }
+
+    done.append(&mut todo);
+    done
+}
+
+fn range_collapse<T>(ranges: &[Range<T>]) -> Vec<Range<T>>
+where
+    T: Ord + Copy,
+{
+    let mut new_ranges: Vec<Range<T>> = Vec::new();
+
+    for range in ranges {
+        new_ranges.push(range.start..range.end);
+    }
+    new_ranges.sort_by(|a, b| a.start.cmp(&b.start));
+
+    let mut i = 0;
+
+    while i < new_ranges.len() - 1 {
+        if new_ranges[i].end >= new_ranges[i + 1].start {
+            if new_ranges[i].end < new_ranges[i + 1].end {
+                new_ranges[i].end = new_ranges[i + 1].end;
+            }
+            new_ranges.remove(i + 1);
+        } else {
+            i += 1;
+        }
+    }
+    new_ranges
 }
