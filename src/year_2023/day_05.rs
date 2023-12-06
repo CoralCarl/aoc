@@ -66,8 +66,7 @@ impl Solution for Day05 {
 
         format!("{}", locations.iter().min().unwrap())
     }
-
-    fn part2(&mut self) -> String {
+fn part2(&mut self) -> String {
         let mut locations: Vec<i128> = Vec::new();
 
         for range in self.seeds.chunks(2) {
@@ -163,6 +162,7 @@ fn range_map(range: &Range<i128>, maps: &Vec<Map>) -> Vec<Range<i128>> {
     done
 }
 
+#[allow(dead_code)]
 fn range_collapse<T>(ranges: &[Range<T>]) -> Vec<Range<T>>
 where
     T: Ord + Copy,
