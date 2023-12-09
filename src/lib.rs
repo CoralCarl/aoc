@@ -24,7 +24,8 @@ pub mod parsing {
             Ok(raw) => raw,
             Err(_) => {
                 let raw = download_input(TOKEN, year, day);
-                std::fs::create_dir_all(format!("data/{year}/")).expect(format!("could not create directory for {year}").as_str());
+                std::fs::create_dir_all(format!("data/{year}/"))
+                    .expect(format!("could not create directory for {year}").as_str());
                 let mut file = File::create(&path)
                     .expect(format!("Could not create File {year}-{day}").as_str());
                 file.write_all(&raw.bytes().collect::<Vec<u8>>())
@@ -39,13 +40,7 @@ pub mod parsing {
     pub fn get_lines(year: usize, day: usize) -> Vec<String> {
         get_string(year, day)
             .lines()
-            .filter_map(|x| {
-                if x.is_empty() {
-                    None
-                } else {
-                    Some(x.to_string())
-                }
-            })
+            .map(|x| x.to_string())
             .collect()
     }
 

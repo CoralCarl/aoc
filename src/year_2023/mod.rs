@@ -16,6 +16,8 @@ mod day_06;
 use day_06::*;
 mod day_07;
 use day_07::*;
+mod day_08;
+use day_08::*;
 
 pub struct Year2023 {
     days: HashMap<usize, Box<dyn Solution>>,
@@ -32,6 +34,7 @@ impl Year2023 {
                 (5, Box::new(Day05::new()) as Box<dyn Solution>),
                 (6, Box::new(Day06::new()) as Box<dyn Solution>),
                 (7, Box::new(Day07::new()) as Box<dyn Solution>),
+                (8, Box::new(Day08::new()) as Box<dyn Solution>),
             ]),
         }
     }
