@@ -3,18 +3,22 @@ pub mod structure;
 pub mod parsing {
     use std::fs::File;
     use std::io::prelude::*;
-    const TOKEN: &str = "53616c7465645f5f4029b94729f7f6d71b2c9623504850cb36ec9c714bea441f2e450f5534b06844bc3efefb9eb33d15a72ea49609d95e0784d6b6f4a0828db0";
+    const TOKEN: &str = "53616c7465645f5f572d38c54040f242a65b98b4bdbd09b842cb33c29bf7a4838095a854b3699265d56d731a716a2ed6b1fd47eaeec0e2d7ec5ce4cc77ac695f";
 
     fn download_input(token: &str, year: usize, day: usize) -> String {
         let client = reqwest::blocking::Client::new();
         let url = format!("https://adventofcode.com/{year}/day/{day}/input");
-        client
+        let response = client
             .get(url)
             .header("Cookie", format!("session={token}"))
             .send()
             .unwrap()
             .text()
-            .expect(format!("Could not download input {year}-{day}").as_str())
+            .expect(format!("Could not download input {year}-{day}").as_str());
+        if response == "Puzzle inputs differ by user.  Please log in to get your puzzle input.\n" {
+            panic!("Session token invalid.");
+        }
+        response
     }
 
     pub fn get_string(year: usize, day: usize) -> String {
