@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::ops::Range;
 
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -89,7 +89,7 @@ impl Solution for Day05 {
     }
 
     fn parse(&mut self) {
-        let data = parsing::get_string(2023, 05);
+        let data = input::to_string(2023, 05);
 
         let mut blocks = data.split("\n\n");
 

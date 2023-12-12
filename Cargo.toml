@@ -6,7 +6,7 @@ default-run = "aoc"
 
 [lib]
 name = "utils"
-path = "src/lib.rs"
+path = "src/lib/mod.rs"
 
 [dependencies]
 reqwest = { version = "0.11", features = ["blocking", "json"] }

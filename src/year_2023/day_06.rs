@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -23,7 +23,7 @@ impl Solution for Day06 {
         format!("{}", result)
     }
     fn parse(&mut self) {
-        let data = parsing::get_lines(2023, 06);
+        let data = input::to_lines(2023, 06);
         let times = data[0].split_whitespace().skip(1);
         let distances = data[1].split_whitespace().skip(1);
 

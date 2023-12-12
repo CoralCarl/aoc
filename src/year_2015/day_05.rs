@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -96,6 +96,6 @@ impl Solution for Day05 {
         format!("{}", nice)
     }
     fn parse(&mut self) {
-        self.data = parsing::get_lines(2015, 05);
+        self.data = input::to_lines(2015, 05);
     }
 }

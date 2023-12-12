@@ -1,27 +1,24 @@
-use utils::structure::Solution;
-use utils::parsing;
+use utils::Solution;
+
+impl Problem {
+    pub fn new() -> Box<dyn Solution> {
+        Box::new(Self::default())
+    }
+}
 
 #[derive(Default)]
-pub struct DayDAY {
-    data: String,
+pub struct Problem {
 }
 
-impl DayDAY {
-    pub fn new() -> Self {
-        Self::default()
+impl Solution for Problem {
+    fn parse(&mut self, input: String) {
     }
-}
 
-impl Solution for DayDAY {
     fn part1(&mut self) -> String {
-        let result = "Not implemented";
-        format!("{}", result)
+        String::from("not implemented")
     }
+
     fn part2(&mut self) -> String {
-        let result = "Not implemented";
-        format!("{}", result)
-    }
-    fn parse(&mut self) {
-        self.data = parsing::get_string(YEAR, DAY);
+        String::from("not implemented")
     }
 }

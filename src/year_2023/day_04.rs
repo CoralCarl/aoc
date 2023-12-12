@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -35,7 +35,7 @@ impl Solution for Day04 {
         format!("{}", cards.iter().sum::<u32>())
     }
     fn parse(&mut self) {
-        for line in parsing::get_lines(2023, 04) {
+        for line in input::to_lines(2023, 04) {
             let (_, line) = line.split_once(": ").unwrap();
             let (left, right) = line.split_once(" | ").unwrap();
 

@@ -1,5 +1,5 @@
 use utils::structure::Solution;
-use utils::parsing;
+use utils::input;
 
 #[derive(Default)]
 pub struct Day07 {
@@ -20,6 +20,6 @@ impl Solution for Day07 {
         format!("Not implemented")
     }
     fn parse(&mut self) {
-        self.data = parsing::get_string(2015, 07);
+        self.data = input::to_string(2015, 07);
     }
 }

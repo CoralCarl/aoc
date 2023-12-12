@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -19,7 +19,7 @@ impl Day10 {
 
 impl Solution for Day10 {
     fn parse(&mut self) {
-        let input = parsing::get_string(2023, 10);
+        let input = input::to_string(2023, 10);
         self.grid = input
             .lines()
             .map(|line| line.chars().collect::<Vec<_>>())

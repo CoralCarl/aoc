@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -22,7 +22,7 @@ impl Solution for Day09 {
         format!("{}", result)
     }
     fn parse(&mut self) {
-        let lines = parsing::get_lines(2023, 09);
+        let lines = input::to_lines(2023, 09);
         for line in &lines {
             self.sequences.push(
                 line.split_whitespace()

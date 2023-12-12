@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use itertools::Itertools;
 use utils::geometry::Point;
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -19,23 +19,15 @@ impl Day11 {
 
 impl Solution for Day11 {
     fn part1(&mut self) -> String {
-        let mut result = 0;
-        for p in &self.pairs {
-            result += p.expand(1);
-        }
-
+        let result = self.pairs.iter().map(|p| p.expand(1)).sum::<usize>();
         format!("{}", result)
     }
     fn part2(&mut self) -> String {
-        let mut result = 0;
-        for p in &self.pairs {
-            result += p.expand(999999);
-        }
-
+        let result = self.pairs.iter().map(|p| p.expand(999999)).sum::<usize>();
         format!("{}", result)
     }
     fn parse(&mut self) {
-        let data = parsing::get_string(2023, 11);
+        let data = input::to_string(2023, 11);
 
         for line in data.lines() {
             self.grid.push(line.chars().collect::<Vec<_>>());

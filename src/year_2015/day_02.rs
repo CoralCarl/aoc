@@ -1,18 +1,17 @@
-use utils::structure::Solution;
-use utils::parsing;
+use utils::Solution;
 
-#[derive(Default)]
-pub struct Day02 {
-    data: Vec<Present>,
-}
-
-impl Day02 {
-    pub fn new() -> Self {
-        Self::default()
+impl Problem {
+    pub fn new() -> Box<dyn Solution> {
+        Box::new(Self::default())
     }
 }
 
-impl Solution for Day02 {
+#[derive(Default)]
+pub struct Problem {
+    data: Vec<Present>,
+}
+
+impl Solution for Problem {
     fn part1(&mut self) -> String {
         let mut paper = 0;
         
@@ -32,8 +31,8 @@ impl Solution for Day02 {
 
         format!("{}", ribbon)
     }
-    fn parse(&mut self) {
-        let data: Vec<Vec<usize>> = parsing::get_numbers(2015, 2, "x");
+    fn parse(&mut self, input: String) {
+        let data: Vec<Vec<usize>> = Vec::new();
         for mut d in data.into_iter(){
             d.sort();
             self.data.push(Present::new(d[0], d[1], d[2]));

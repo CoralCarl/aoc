@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -55,7 +55,7 @@ impl Solution for Day02 {
         format!("{}", result)
     }
     fn parse(&mut self) {
-        let lines = parsing::get_lines(2023, 02);
+        let lines = input::to_lines(2023, 02);
         let mut games: Vec<Game> = Vec::new();
 
         for line in lines.iter() {

@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -73,6 +73,6 @@ impl Solution for Day01 {
     }
 
     fn parse(&mut self) {
-        self.lines = parsing::get_lines(2023, 01);
+        self.lines = input::to_lines(2023, 01);
     }
 }

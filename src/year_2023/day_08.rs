@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -66,7 +66,7 @@ impl Solution for Day08 {
         format!("{}", steps)
     }
     fn parse(&mut self) {
-        let lines = parsing::get_lines(2023, 08);
+        let lines = input::to_lines(2023, 08);
         let _lines = "LR
 
 11A = (11B, XXX)

@@ -1,19 +1,21 @@
-use utils::structure::Solution;
-use utils::parsing;
+use utils::Solution;
 
-pub struct Day01 {
-    data: String,
-}
-
-impl Day01 {
-    pub fn new() -> Self {
-        Self {
-            data: String::new(),
-        }
+impl Problem {
+    pub fn new() -> Box<dyn Solution> {
+        Box::new(Self::default())
     }
 }
 
-impl Solution for Day01 {
+#[derive(Default)]
+pub struct Problem {
+    data: String,
+}
+
+impl Solution for Problem {
+    fn parse(&mut self, input: String) {
+        self.data = input;
+    }
+
     fn part1(&mut self) -> String {
         let mut floor = 0;
         for c in self.data.chars() {
@@ -25,6 +27,7 @@ impl Solution for Day01 {
         }
         floor.to_string()
     }
+
     fn part2(&mut self) -> String {
         let mut floor = 0;
         let mut i = 1;
@@ -40,8 +43,5 @@ impl Solution for Day01 {
             i += 1;
         }
         i.to_string()
-    }
-    fn parse(&mut self) {
-        self.data = parsing::get_string(2015, 1);
     }
 }

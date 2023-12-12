@@ -3,12 +3,10 @@ use std::{
     time::{Duration, Instant},
 };
 
-use utils::structure::{Solution, Year};
+use utils::Solution;
 
 mod year_2015;
-use year_2015::*;
-mod year_2023;
-use year_2023::*;
+// mod year_2023;
 
 fn format_time(time: &Duration) -> String {
     let s;
@@ -43,81 +41,90 @@ fn print_result(part: usize, result: &str, time: Duration) {
     }
 }
 
-fn print_day(id: usize, day: &mut dyn Solution) {
-    println!("-------- Day {:02} --------", id);
+fn print_day(day: usize, input: String, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+    println!("-------- Day {:02} --------", day);
+    let mut solution = solution();
 
     let instant = Instant::now();
-    day.parse();
+    solution.parse(input);
     let time = instant.elapsed();
     println!("{} - Parsing", format_time(&time));
 
     let instant = Instant::now();
-    let part1 = day.part1();
+    let part1 = solution.part1();
     let time = instant.elapsed();
     print_result(1, &part1, time);
 
     let instant = Instant::now();
-    let part2 = day.part2();
+    let part2 = solution.part2();
     let time = instant.elapsed();
     print_result(2, &part2, time);
 
     println!();
 }
 
-fn print_year(id: usize, year: &mut dyn Year) {
-    println!("========  {id}  ========");
+fn run_solution(year: usize, day: usize, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+    let input = utils::input::read_input(year, day);
+    print_day(day, input, solution);
+}
 
-    for i in 1..=25 {
-        if let Some(day) = year.get_days().get_mut(&i) {
-            print_day(i, day.as_mut());
-        }
-    }
+fn run_test(year: usize, day: usize, test: &str, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+    let input = utils::input::read_test_input(year, day, test);
+    print_day(day, input, solution);
 }
 
 fn main() {
-    let args: Vec<_> = std::env::args().collect();
-    let years: [(usize, Box<dyn Year>); 2] = [
-        (2015, Box::new(Year2015::new())),
-        (2023, Box::new(Year2023::new())),
-    ];
-    let mut years = HashMap::from(years);
+    let mut args: Vec<String> = Vec::new();
+    let mut kwargs: HashMap<String, String> = HashMap::new();
+    let mut iargs = std::env::args().skip(1);
+
+    while let Some(arg) = iargs.next() {
+        match arg.as_str() {
+            "-t" => {
+                kwargs.insert(arg, iargs.next().expect("argument -t requires index"));
+            }
+            _ => args.push(arg),
+        }
+    }
+
+    let mut years: HashMap<usize, HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>>> =
+        HashMap::new();
+
+    years.insert(2015, year_2015::days());
+
+    let year: usize;
+    let mut days: Vec<usize> = Vec::new();
 
     match args.len() {
+        0 => {
+            year = *years.keys().max().unwrap();
+            days.push(*years.get(&year).unwrap().keys().max().unwrap());
+        }
         1 => {
-            let year_id = years.keys().max().unwrap().clone();
-            let day_id = years
-                .get_mut(&year_id)
-                .unwrap()
-                .get_days()
-                .keys()
-                .max()
-                .unwrap()
-                .clone();
-            let day = years
-                .get_mut(&year_id)
-                .unwrap()
-                .get_days()
-                .get_mut(&day_id)
-                .unwrap()
-                .as_mut();
-            print_day(day_id, day);
+            year = args[0].parse::<usize>().expect("invalid year format");
+            for &day in years.get(&year).unwrap().keys() {
+                days.push(day);
+            }
+            days.sort();
         }
         2 => {
-            let year_id = args[1].parse::<usize>().expect("year parameter invalid");
-            let year = years.get_mut(&year_id).expect("year not implemented").as_mut();
-            print_year(year_id, year);
+            year = args[0].parse::<usize>().expect("invalid year format");
+            days.push(args[1].parse::<usize>().expect("invalid day format"));
         }
-        3 => {
-            let year_id = args[1].parse::<usize>().expect("year parameter invalid");
-            let day_id = args[2].parse::<usize>().expect("day parameter invalid");
-            let year = years.get_mut(&year_id).expect("year not implemented");
-            let day = year
-                .get_days()
-                .get_mut(&day_id)
-                .expect("day not implemented")
-                .as_mut();
-            print_day(day_id, day);
+        _ => panic!("expected arguments: [yyyy [dd]]"),
+    }
+
+    println!("========  {year}  ========");
+    for &day in &days {
+        let mut solution = years
+            .get_mut(&year)
+            .unwrap()
+            .remove(&day)
+            .unwrap();
+        if let Some(test) = kwargs.get("-t") {
+            run_test(year, day, test, &mut solution);
+        } else {
+            run_solution(year, day, &mut solution);
         }
-        _ => panic!("expected arguments: yyyy [dd]"),
     }
 }

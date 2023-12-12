@@ -49,7 +49,7 @@ impl Year2023 {
     }
 }
 
-impl Year for Year2023 {
+impl DayCollection for Year2023 {
     fn get_days(&mut self) -> &mut HashMap<usize, Box<dyn Solution>> {
         &mut self.days
     }

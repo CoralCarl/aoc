@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -51,6 +51,6 @@ impl Solution for Day03 {
         format!("{}", grid.len())
     }
     fn parse(&mut self) {
-        self.data = parsing::get_string(2015, 03);
+        self.data = input::to_string(2015, 03);
     }
 }

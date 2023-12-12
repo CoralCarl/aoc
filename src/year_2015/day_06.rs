@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -58,7 +58,7 @@ impl Solution for Day06 {
     }
 
     fn parse(&mut self) {
-        let lines = parsing::get_lines(2015, 06);
+        let lines = input::to_lines(2015, 06);
         for line in lines.iter() {
             let words: Vec<_> = line.split(' ').collect();
             let value: String;

@@ -1,4 +1,4 @@
-use utils::parsing;
+use utils::input;
 use utils::structure::Solution;
 
 #[derive(Default)]
@@ -35,7 +35,7 @@ impl Solution for Day07 {
         format!("{}", result)
     }
     fn parse(&mut self) {
-        for line in parsing::get_lines(2023, 07) {
+        for line in input::to_lines(2023, 07) {
             let (s, b) = line.split_once(' ').unwrap();
             self.set.push((Hand::new(s), b.parse::<u32>().unwrap()));
         }
