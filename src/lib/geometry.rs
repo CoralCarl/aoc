@@ -31,6 +31,33 @@ impl<T> Point<T> {
 
         (x + y) as usize
     }
+
+    pub fn moved_by(&self, d: Direction, value: T) -> Point<T>
+    where
+        T: std::ops::Add<Output = T>,
+        T: std::ops::Sub<Output = T>,
+        T: Copy + Clone,
+    {
+        match d {
+            Direction::North => Point::from((self.x, self.y - value)),
+            Direction::South => Point::from((self.x, self.y + value)),
+            Direction::West => Point::from((self.x - value, self.y)),
+            Direction::East => Point::from((self.x + value, self.y)),
+        }
+    }
+
+    pub fn move_by(&mut self, d: Direction, value: T)
+    where
+        T: std::ops::SubAssign<T>,
+        T: std::ops::AddAssign<T>,
+    {
+        match d {
+            Direction::North => self.y -= value,
+            Direction::South => self.y += value,
+            Direction::West => self.x -= value,
+            Direction::East => self.x += value,
+        }
+    }
 }
 
 impl<T: Add<Output = T>> Add for Point<T> {

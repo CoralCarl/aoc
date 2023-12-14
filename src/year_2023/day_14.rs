@@ -22,21 +22,17 @@ impl Solution for Problem {
             y_size -= 1;
         }
 
-        let mut boulders: HashSet<Point<i32>> = HashSet::new();
-        let mut rocks: HashSet<Point<i32>> = HashSet::new();
+        let mut boulders: HashSet<Point<usize>> = HashSet::new();
+        let mut rocks: HashSet<Point<usize>> = HashSet::new();
 
         for (y, row) in input.lines().enumerate() {
             for (x, ch) in row.chars().enumerate() {
                 match ch {
-                    'O' => {
-                        boulders.insert(Point::from((x as i32, y as i32)));
-                    }
-                    '#' => {
-                        rocks.insert(Point::from((x as i32, y as i32)));
-                    }
-                    '.' => (),
+                    'O' => boulders.insert(Point { x, y }),
+                    '#' => rocks.insert(Point { x, y }),
+                    '.' => false,
                     _ => panic!(),
-                }
+                };
             }
         }
 
@@ -62,8 +58,8 @@ impl Solution for Problem {
 
 #[derive(Default, Clone)]
 struct Dish {
-    rocks: HashSet<Point<i32>>,
-    boulders: HashSet<Point<i32>>,
+    rocks: HashSet<Point<usize>>,
+    boulders: HashSet<Point<usize>>,
     x_size: usize,
     y_size: usize,
 }
@@ -77,23 +73,23 @@ impl Dish {
     }
 
     fn tilt(&mut self, d: Direction) {
-        let mut boulders: HashSet<Point<i32>> = HashSet::new();
-        let mut removed: HashSet<Point<i32>> = HashSet::new();
+        let mut boulders: HashSet<Point<usize>> = HashSet::new();
+        let mut removed: HashSet<Point<usize>> = HashSet::new();
 
         for b in self.boulders.iter() {
             let mut valid_position = *b;
             let mut position = *b;
             loop {
-                position += d.as_point();
-                if position.x < 0
-                    || position.y < 0
-                    || position.x >= self.x_size as i32
-                    || position.y >= self.y_size as i32
+                position.move_by(d, 1);
+                if position.x >= self.x_size
+                    || position.y >= self.y_size
                     || self.rocks.contains(&position)
                 {
                     break;
                 }
-                if !boulders.contains(&position) && (!self.boulders.contains(&position) || removed.contains(&position)) {
+                if !boulders.contains(&position)
+                    && (!self.boulders.contains(&position) || removed.contains(&position))
+                {
                     valid_position = position;
                 }
             }
@@ -124,8 +120,8 @@ impl Dish {
     fn print(&self) {
         for y in 0..self.y_size {
             for x in 0..self.x_size {
-                let y = y as i32;
-                let x = x as i32;
+                let y = y as usize;
+                let x = x as usize;
                 if self.boulders.contains(&Point { x, y }) {
                     print!("O");
                 } else if self.rocks.contains(&Point { x, y }) {
