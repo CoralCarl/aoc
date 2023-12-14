@@ -14,13 +14,12 @@ pub struct Problem {
 impl Solution for Problem {
     fn part1(&mut self) -> String {
         let mut paper = 0;
-        
+
         for present in self.data.iter() {
             paper += present.surface() + present.slack();
         }
-        
+
         format!("{}", paper)
-        
     }
     fn part2(&mut self) -> String {
         let mut ribbon = 0;
@@ -32,8 +31,15 @@ impl Solution for Problem {
         format!("{}", ribbon)
     }
     fn parse(&mut self, input: String) {
-        let data: Vec<Vec<usize>> = Vec::new();
-        for mut d in data.into_iter(){
+        let data = input
+            .lines()
+            .map(|line| {
+                line.split("x")
+                    .map(|num| num.parse::<usize>().unwrap())
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        for mut d in data.into_iter() {
             d.sort();
             self.data.push(Present::new(d[0], d[1], d[2]));
         }
@@ -56,7 +62,7 @@ impl Present {
     }
 
     fn surface(&self) -> usize {
-        2*(self.length*(self.width+self.height) + self.width*self.height)
+        2 * (self.length * (self.width + self.height) + self.width * self.height)
     }
 
     fn slack(&self) -> usize {

@@ -1,56 +1,36 @@
 use std::collections::HashMap;
+use utils::Solution;
 
-use utils::structure::*;
+// mod day_01;
+// mod day_02;
+// mod day_03;
+// mod day_04;
+// mod day_05;
+// mod day_06;
+// mod day_07;
+// mod day_08;
+// mod day_09;
+// mod day_10;
+// mod day_11;
+mod day_12;
+mod day_13;
 
-mod day_01;
-use day_01::*;
-mod day_02;
-use day_02::*;
-mod day_03;
-use day_03::*;
-mod day_04;
-use day_04::*;
-mod day_05;
-use day_05::*;
-mod day_06;
-use day_06::*;
-mod day_07;
-use day_07::*;
-mod day_08;
-use day_08::*;
-mod day_09;
-use day_09::*;
-mod day_10;
-use day_10::*;
-mod day_11;
-use day_11::*;
+pub fn days() -> HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> {
+    let mut days: HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> = HashMap::new();
 
-pub struct Year2023 {
-    days: HashMap<usize, Box<dyn Solution>>,
-}
+    // days.insert(1, Box::new(day_01::Problem::new));
+    // days.insert(2, Box::new(day_02::Problem::new));
+    // days.insert(3, Box::new(day_03::Problem::new));
+    // days.insert(4, Box::new(day_04::Problem::new));
+    // days.insert(5, Box::new(day_05::Problem::new));
+    // days.insert(6, Box::new(day_06::Problem::new));
+    // days.insert(7, Box::new(day_07::Problem::new));
+    // days.insert(8, Box::new(day_08::Problem::new));
+    // days.insert(9, Box::new(day_09::Problem::new));
+    // days.insert(10, Box::new(day_10::Problem::new));
+    // days.insert(11, Box::new(day_11::Problem::new));
+    days.insert(12, Box::new(day_12::Problem::new));
+    days.insert(13, Box::new(day_13::Problem::new));
 
-impl Year2023 {
-    pub fn new() -> Self {
-        Self {
-            days: HashMap::from([
-                (1, Box::new(Day01::new()) as Box<dyn Solution>),
-                (2, Box::new(Day02::new()) as Box<dyn Solution>),
-                (3, Box::new(Day03::new()) as Box<dyn Solution>),
-                (4, Box::new(Day04::new()) as Box<dyn Solution>),
-                (5, Box::new(Day05::new()) as Box<dyn Solution>),
-                (6, Box::new(Day06::new()) as Box<dyn Solution>),
-                (7, Box::new(Day07::new()) as Box<dyn Solution>),
-                (8, Box::new(Day08::new()) as Box<dyn Solution>),
-                (9, Box::new(Day09::new()) as Box<dyn Solution>),
-                (10, Box::new(Day10::new()) as Box<dyn Solution>),
-                (11, Box::new(Day11::new()) as Box<dyn Solution>),
-            ]),
-        }
-    }
-}
-
-impl DayCollection for Year2023 {
-    fn get_days(&mut self) -> &mut HashMap<usize, Box<dyn Solution>> {
-        &mut self.days
-    }
+    days
 }

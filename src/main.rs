@@ -6,7 +6,7 @@ use std::{
 use utils::Solution;
 
 mod year_2015;
-// mod year_2023;
+mod year_2023;
 
 fn format_time(time: &Duration) -> String {
     let s;
@@ -91,6 +91,7 @@ fn main() {
         HashMap::new();
 
     years.insert(2015, year_2015::days());
+    years.insert(2023, year_2023::days());
 
     let year: usize;
     let mut days: Vec<usize> = Vec::new();
