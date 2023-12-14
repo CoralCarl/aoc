@@ -1,6 +1,4 @@
 use std::collections::HashSet;
-use std::time::Instant;
-
 use utils::geometry::{Direction, Point};
 use utils::Solution;
 
@@ -12,26 +10,26 @@ impl Problem {
 
 #[derive(Default)]
 pub struct Problem {
-    grid: Grid,
+    dish: Dish,
 }
 
 impl Solution for Problem {
     fn parse(&mut self, input: String) {
-        let x_max = input.find('\n').unwrap();
-        let mut y_max = input.len() / x_max;
+        let x_size = input.find('\n').unwrap();
+        let mut y_size = input.len() / x_size;
 
         if input.ends_with('\n') {
-            y_max -= 1;
+            y_size -= 1;
         }
 
-        let mut boulders: Vec<Point<i32>> = Vec::new();
+        let mut boulders: HashSet<Point<i32>> = HashSet::new();
         let mut rocks: HashSet<Point<i32>> = HashSet::new();
 
         for (y, row) in input.lines().enumerate() {
             for (x, ch) in row.chars().enumerate() {
                 match ch {
                     'O' => {
-                        boulders.push(Point::from((x as i32, y as i32)));
+                        boulders.insert(Point::from((x as i32, y as i32)));
                     }
                     '#' => {
                         rocks.insert(Point::from((x as i32, y as i32)));
@@ -42,60 +40,67 @@ impl Solution for Problem {
             }
         }
 
-        self.grid = Grid {
+        self.dish = Dish {
             rocks,
             boulders,
-            x_max,
-            y_max,
+            x_size,
+            y_size,
         };
     }
 
     fn part1(&mut self) -> String {
-        let mut grid = self.grid.clone();
+        let mut grid = self.dish.clone();
         grid.tilt(Direction::North);
         grid.structural_load().to_string()
     }
 
     fn part2(&mut self) -> String {
-        self.grid.spin_cycle(1000000000);
-        self.grid.structural_load().to_string()
+        self.dish.spin_cycle(1000000000);
+        self.dish.structural_load().to_string()
     }
 }
 
 #[derive(Default, Clone)]
-struct Grid {
+struct Dish {
     rocks: HashSet<Point<i32>>,
-    boulders: Vec<Point<i32>>,
-    x_max: usize,
-    y_max: usize,
+    boulders: HashSet<Point<i32>>,
+    x_size: usize,
+    y_size: usize,
 }
 
-impl Grid {
+impl Dish {
     fn structural_load(&self) -> usize {
         self.boulders
             .iter()
-            .map(|b| self.y_max - b.y as usize)
+            .map(|b| self.y_size - b.y as usize)
             .sum::<usize>()
     }
 
     fn tilt(&mut self, d: Direction) {
-        for i in 0..self.boulders.len() {
-            let mut pos = self.boulders[i];
+        let mut boulders: HashSet<Point<i32>> = HashSet::new();
+        let mut removed: HashSet<Point<i32>> = HashSet::new();
+
+        for b in self.boulders.iter() {
+            let mut valid_position = *b;
+            let mut position = *b;
             loop {
-                pos += d.as_point();
-                if pos.x < 0
-                    || pos.y < 0
-                    || pos.x >= self.x_max as i32
-                    || pos.y >= self.y_max as i32
-                    || self.rocks.contains(&pos)
+                position += d.as_point();
+                if position.x < 0
+                    || position.y < 0
+                    || position.x >= self.x_size as i32
+                    || position.y >= self.y_size as i32
+                    || self.rocks.contains(&position)
                 {
                     break;
                 }
-                if !self.boulders.contains(&pos) {
-                    self.boulders[i] = pos;
+                if !boulders.contains(&position) && (!self.boulders.contains(&position) || removed.contains(&position)) {
+                    valid_position = position;
                 }
             }
+            boulders.insert(valid_position);
+            removed.insert(*b);
         }
+        self.boulders = boulders;
     }
 
     fn spin_cycle(&mut self, cycles: usize) {
@@ -105,14 +110,8 @@ impl Grid {
                 self.tilt(d);
             }
 
-            // self.print();
-
-            if visited.contains(&self.boulders) {
-                let offset = visited
-                    .iter()
-                    .position(|state| *state == self.boulders)
-                    .unwrap();
-                let cycle = i + 1- offset;
+            if let Some(offset) = visited.iter().position(|state| *state == self.boulders) {
+                let cycle = i + 1 - offset;
                 self.boulders = visited[(cycles - offset) % cycle + offset].clone();
                 break;
             } else {
@@ -123,8 +122,8 @@ impl Grid {
 
     #[allow(dead_code)]
     fn print(&self) {
-        for y in 0..self.y_max {
-            for x in 0..self.x_max {
+        for y in 0..self.y_size {
+            for x in 0..self.x_size {
                 let y = y as i32;
                 let x = x as i32;
                 if self.boulders.contains(&Point { x, y }) {
