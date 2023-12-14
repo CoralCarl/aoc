@@ -8,7 +8,7 @@ use utils::Solution;
 // mod day_05;
 // mod day_06;
 // mod day_07;
-// mod day_08;
+mod day_08;
 // mod day_09;
 // mod day_10;
 // mod day_11;
@@ -26,7 +26,7 @@ pub fn days() -> HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> {
     // days.insert(5, Box::new(day_05::Problem::new));
     // days.insert(6, Box::new(day_06::Problem::new));
     // days.insert(7, Box::new(day_07::Problem::new));
-    // days.insert(8, Box::new(day_08::Problem::new));
+    days.insert(8, Box::new(day_08::Problem::new));
     // days.insert(9, Box::new(day_09::Problem::new));
     // days.insert(10, Box::new(day_10::Problem::new));
     // days.insert(11, Box::new(day_11::Problem::new));

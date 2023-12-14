@@ -1,97 +1,93 @@
 use std::collections::HashMap;
 
-use utils::input;
-use utils::structure::Solution;
+use utils::Solution;
+
+impl Problem {
+    pub fn new() -> Box<dyn Solution> {
+        Box::new(Self::default())
+    }
+}
 
 #[derive(Default)]
-pub struct Day08 {
-    instruction: String,
-    map: HashMap<String, Vec<String>>,
+pub struct Problem {
+    instructions: Vec<usize>,
+    maps: HashMap<String, [String; 2]>,
 }
 
-impl Day08 {
-    pub fn new() -> Self {
-        Self::default()
-    }
+impl Solution for Problem {
+    fn parse(&mut self, input: String) {
+        let mut lines = input.lines();
+        self.instructions = lines
+            .next()
+            .unwrap()
+            .chars()
+            .map(|ch| "LR".find(ch).unwrap())
+            .collect::<Vec<usize>>();
 
-    fn next_instruction(&self, steps: usize) -> usize {
-        "LR".find(
-            self.instruction
-                .chars()
-                .nth(steps % self.instruction.len())
-                .unwrap(),
-        )
-        .unwrap()
-    }
-}
-
-impl Solution for Day08 {
-    fn part1(&mut self) -> String {
-        let mut location = String::from("AAA");
-
-        let mut steps = 0;
-        while location != "ZZZ" {
-            location = self.map.get(&location).unwrap()[self.next_instruction(steps)].to_string();
-            steps += 1;
+        for line in lines.skip(1) {
+            let (key, list) = line.split_once(" = ").unwrap();
+            let (left, right) = list[1..list.len() - 1].split_once(", ").unwrap();
+            self.maps
+                .insert(key.to_string(), [left.to_string(), right.to_string()]);
         }
-
-        format!("{}", steps)
     }
+
+    fn part1(&mut self) -> String {
+        let mut location = &String::from("AAA");
+        let mut steps = 0;
+        for instruction in self.instructions.iter().cycle() {
+            location = &self.maps.get(location).unwrap()[*instruction];
+            steps += 1;
+            if location == &String::from("ZZZ") {
+                break;
+            }
+        }
+        steps.to_string()
+    }
+
     fn part2(&mut self) -> String {
         let mut locations = self
-            .map
+            .maps
             .keys()
             .filter(|s| s.ends_with('A'))
             .collect::<Vec<_>>();
 
-        let mut steps = 0;
-        while locations
-            .iter()
-            .filter(|s| !s.ends_with('Z'))
-            .collect::<Vec<_>>()
-            .len()
-            > 0
-        {
-            for location in locations.iter_mut() {
-                *location = self
-                    .map
-                    .get(location.as_str())
-                    .unwrap()
-                    .get(self.next_instruction(steps))
-                    .unwrap();
+        let mut cycles: Vec<usize> = Vec::new();
+
+        for location in locations.iter_mut() {
+            let mut instruction = self.instructions.iter().cycle();
+            let mut visited: Vec<&String> = Vec::new();
+
+            while !(visited.contains(&location) && location.ends_with('Z')) {
+                visited.push(*location);
+                *location = &self.maps.get(*location).unwrap()[*instruction.next().unwrap()];
             }
-            steps += 1;
+
+            let cycle = visited.iter().position(|loc| *loc == *location).unwrap();
+
+            cycles.push(cycle );
         }
 
-        format!("{}", steps)
-    }
-    fn parse(&mut self) {
-        let lines = input::to_lines(2023, 08);
-        let _lines = "LR
-
-11A = (11B, XXX)
-11B = (XXX, 11Z)
-11Z = (11B, XXX)
-22A = (22B, XXX)
-22B = (22C, 22C)
-22C = (22Z, 22Z)
-22Z = (22B, 22B)
-XXX = (XXX, XXX)"
-            .lines()
-            .collect::<Vec<_>>();
-
-        let instruction = lines[0].to_string();
-        let mut map: HashMap<String, Vec<String>> = HashMap::new();
-        for line in &lines[2..] {
-            let (key, list) = line.split_once(" = ").unwrap();
-            println!("{key} {list:?}");
-            let list = list[1..list.len() - 1]
-                .split(", ")
-                .map(|s| s.to_string())
-                .collect::<Vec<String>>();
-            map.insert(key.to_string(), list);
-        }
-        self.instruction = instruction;
-        self.map = map;
+        lcm(cycles).to_string()
     }
 }
+
+fn gcd(mut a: usize, mut b: usize) -> usize {
+    while b != 0 {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    a
+}
+
+fn lcm(nums: Vec<usize>) -> usize {
+    let mut n = nums.iter();
+    let mut a = *n.next().unwrap();
+    while let Some(&b) = n.next() {
+        a = a * b / gcd(a,b);
+    }
+    a
+}
+
+
