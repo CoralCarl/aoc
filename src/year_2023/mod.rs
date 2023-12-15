@@ -15,6 +15,7 @@ mod day_08;
 // mod day_12;
 mod day_13;
 mod day_14;
+mod day_15;
 
 pub fn days() -> HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> {
     let mut days: HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> = HashMap::new();
@@ -33,6 +34,7 @@ pub fn days() -> HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>> {
     // days.insert(12, Box::new(day_12::Problem::new));
     days.insert(13, Box::new(day_13::Problem::new));
     days.insert(14, Box::new(day_14::Problem::new));
+    days.insert(15, Box::new(day_15::Problem::new));
 
     days
 }
