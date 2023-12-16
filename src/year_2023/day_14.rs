@@ -46,7 +46,7 @@ impl Solution for Problem {
 
     fn part1(&mut self) -> String {
         let mut grid = self.dish.clone();
-        grid.tilt(Direction::North);
+        grid.tilt(Direction::Up);
         grid.structural_load().to_string()
     }
 

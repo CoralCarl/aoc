@@ -39,10 +39,10 @@ impl<T> Point<T> {
         T: Copy + Clone,
     {
         match d {
-            Direction::North => Point::from((self.x, self.y - value)),
-            Direction::South => Point::from((self.x, self.y + value)),
-            Direction::West => Point::from((self.x - value, self.y)),
-            Direction::East => Point::from((self.x + value, self.y)),
+            Direction::Up => Point::from((self.x, self.y - value)),
+            Direction::Down => Point::from((self.x, self.y + value)),
+            Direction::Left => Point::from((self.x - value, self.y)),
+            Direction::Right => Point::from((self.x + value, self.y)),
         }
     }
 
@@ -52,10 +52,10 @@ impl<T> Point<T> {
         T: std::ops::AddAssign<T>,
     {
         match d {
-            Direction::North => self.y -= value,
-            Direction::South => self.y += value,
-            Direction::West => self.x -= value,
-            Direction::East => self.x += value,
+            Direction::Up => self.y -= value,
+            Direction::Down => self.y += value,
+            Direction::Left => self.x -= value,
+            Direction::Right => self.x += value,
         }
     }
 }
@@ -96,21 +96,21 @@ impl<T: SubAssign<T>> SubAssign for Point<T> {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(PartialEq, Eq, Hash, Debug, Copy, Clone)]
 pub enum Direction {
-    North,
-    East,
-    South,
-    West,
+    Up,
+    Right,
+    Down,
+    Left,
 }
 
 impl Direction {
     pub fn iter() -> impl Iterator<Item = Direction> {
         [
-            Direction::North,
-            Direction::East,
-            Direction::South,
-            Direction::West,
+            Direction::Up,
+            Direction::Right,
+            Direction::Down,
+            Direction::Left,
         ]
         .iter()
         .copied()
@@ -118,10 +118,10 @@ impl Direction {
 
     pub fn cw() -> impl Iterator<Item = Direction> {
         [
-            Direction::North,
-            Direction::East,
-            Direction::South,
-            Direction::West,
+            Direction::Up,
+            Direction::Right,
+            Direction::Down,
+            Direction::Left,
         ]
         .iter()
         .copied()
@@ -129,10 +129,10 @@ impl Direction {
 
     pub fn ccw() -> impl Iterator<Item = Direction> {
         [
-            Direction::North,
-            Direction::West,
-            Direction::South,
-            Direction::East,
+            Direction::Up,
+            Direction::Left,
+            Direction::Down,
+            Direction::Right,
         ]
         .iter()
         .copied()
@@ -140,10 +140,10 @@ impl Direction {
 
     pub fn as_point(&self) -> Point<i32> {
         match &self {
-            Direction::North => Point::from((0, -1)),
-            Direction::East => Point::from((1, 0)),
-            Direction::South => Point::from((0, 1)),
-            Direction::West => Point::from((-1, 0)),
+            Direction::Up => Point::from((0, -1)),
+            Direction::Right => Point::from((1, 0)),
+            Direction::Down => Point::from((0, 1)),
+            Direction::Left => Point::from((-1, 0)),
         }
     }
 }
