@@ -17,7 +17,7 @@ pub struct Problem {
 impl Solution for Problem {
     fn parse(&mut self, input: String) {
         for line in input.lines() {
-            let (springs, checksum) = line.split_once(' ').unwrap();
+            let (springs, defects) = line.split_once(' ').unwrap();
             let springs = springs
                 .chars()
                 .map(|ch| match ch {
@@ -27,14 +27,11 @@ impl Solution for Problem {
                     _ => panic!(),
                 })
                 .collect::<Vec<_>>();
-            let checksum = checksum
+            let defects = defects
                 .split(',')
                 .map(|n| n.parse::<usize>().unwrap())
                 .collect::<Vec<_>>();
-            self.records.push(Record {
-                springs,
-                defects: checksum,
-            });
+            self.records.push(Record { springs, defects });
         }
     }
 
@@ -112,8 +109,11 @@ fn calculate_possibilities(
 
     let minimum_start = defects_min_length(defects_left);
     let maximum_end = springs.len()
-        - defects_min_length(defects_right)
-        - if defects_right.len() > 0 { 1 } else { 0 };
+        - if defects_right.len() > 0 {
+            defects_min_length(defects_right) + 1
+        } else {
+            0
+        };
 
     let mut possible_starts: Vec<usize> = Vec::new();
 
@@ -141,10 +141,10 @@ fn calculate_possibilities(
 
     let mut branch_possibilities = 0;
 
-    for p in &possible_starts {
+    for start in &possible_starts {
         let mut possibilities = 1;
-        let springs_left = &springs[..p.checked_sub(1).unwrap_or(0)];
-        let springs_right = &springs.get(*p + longest_defect + 1..).unwrap_or(&[]);
+        let springs_left = &springs[..start.checked_sub(1).unwrap_or(0)];
+        let springs_right = &springs.get(*start + longest_defect + 1..).unwrap_or(&[]);
         if !defects_left.is_empty() {
             if defects_min_length(defects_left) > springs_left.len() {
                 continue;
