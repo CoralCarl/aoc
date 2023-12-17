@@ -87,7 +87,6 @@ fn calculate_possibilities(
         return *possibilities;
     }
 
-    // already impossible
     if defects_min_length(defects) > springs.len() {
         cache.insert(
             Record {
@@ -124,8 +123,7 @@ fn calculate_possibilities(
                 continue 'find_location;
             }
         }
-        
-        // check that before and after aren't damaged
+
         if let Some(condition) = springs.get(i + longest_defect) {
             if *condition == Condition::Broken {
                 continue 'find_location;
