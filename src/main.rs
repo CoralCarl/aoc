@@ -3,9 +3,6 @@ use std::{
     time::{Duration, Instant},
 };
 
-use utils::Solution;
-
-mod year_2015;
 mod year_2023;
 
 fn format_time(time: &Duration) -> String {
@@ -41,37 +38,32 @@ fn print_result(part: usize, result: &str, time: Duration) {
     }
 }
 
-fn print_day(day: usize, input: String, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+fn print_day(day: usize, input: String, solution: Solution) {
     println!("-------- Day {:02} --------", day);
-    let mut solution = solution();
-
     let instant = Instant::now();
-    solution.parse(input);
-    let time = instant.elapsed();
-    println!("{} - Parsing", format_time(&time));
-
-    let instant = Instant::now();
-    let part1 = solution.part1();
+    let part1 = solution.0(&input);
     let time = instant.elapsed();
     print_result(1, &part1, time);
 
     let instant = Instant::now();
-    let part2 = solution.part2();
+    let part2 = solution.1(&input);
     let time = instant.elapsed();
     print_result(2, &part2, time);
 
     println!();
 }
 
-fn run_solution(year: usize, day: usize, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+fn run_solution(year: usize, day: usize, solution: Solution) {
     let input = utils::input::read_input(year, day);
     print_day(day, input, solution);
 }
 
-fn run_test(year: usize, day: usize, test: &str, solution: &mut dyn Fn() -> Box<dyn Solution>) {
+fn run_test(year: usize, day: usize, test: &str, solution: Solution) {
     let input = utils::input::read_test_input(year, day, test);
     print_day(day, input, solution);
 }
+
+type Solution = (Box<dyn Fn(&str) -> String>, Box<dyn Fn(&str) -> String>);
 
 fn main() {
     let mut args: Vec<String> = Vec::new();
@@ -87,10 +79,8 @@ fn main() {
         }
     }
 
-    let mut years: HashMap<usize, HashMap<usize, Box<dyn Fn() -> Box<dyn Solution>>>> =
-        HashMap::new();
+    let mut years: HashMap<usize, HashMap<usize, Solution>> = HashMap::new();
 
-    years.insert(2015, year_2015::days());
     years.insert(2023, year_2023::days());
 
     let year: usize;
@@ -117,15 +107,11 @@ fn main() {
 
     println!("========  {year}  ========");
     for &day in &days {
-        let mut solution = years
-            .get_mut(&year)
-            .unwrap()
-            .remove(&day)
-            .unwrap();
+        let solution = years.get_mut(&year).unwrap().remove(&day).unwrap();
         if let Some(test) = kwargs.get("-t") {
-            run_test(year, day, test, &mut solution);
+            run_test(year, day, test, solution);
         } else {
-            run_solution(year, day, &mut solution);
+            run_solution(year, day, solution);
         }
     }
 }

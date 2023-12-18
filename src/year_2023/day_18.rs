@@ -1,44 +1,25 @@
-use utils::Solution;
-
-impl Problem {
-    pub fn new() -> Box<dyn Solution> {
-        Box::new(Self::default())
+pub fn part1(input: &str) -> String {
+    let mut plan: Vec<(char, usize)> = Vec::new();
+    for line in input.lines() {
+        let mut spl = line.split_whitespace();
+        plan.push((
+            spl.next().unwrap().chars().next().unwrap(),
+            spl.next().unwrap().parse::<usize>().unwrap(),
+        ));
     }
+    area(&plan).to_string()
 }
 
-#[derive(Default)]
-pub struct Problem {
-    plan: Vec<(char, usize)>,
-    correct_plan: Vec<(char, usize)>,
-}
-
-impl Solution for Problem {
-    fn parse(&mut self, input: String) {
-        for line in input.lines() {
-            let mut spl = line.split_whitespace();
-            self.plan.push((
-                spl.next().unwrap().chars().next().unwrap(),
-                spl.next().unwrap().parse::<usize>().unwrap(),
-            ));
-            let (d, v) = spl
-                .next()
-                .unwrap()
-                .trim_matches(|ch| ch == '(' || ch == ')')[1..]
-                .split_at(5);
-            self.correct_plan.push((
-                ['R', 'D','L','U'][v.parse::<usize>().unwrap()],
-                usize::from_str_radix(d, 16).unwrap(),
-            ));
-        }
+pub fn part2(input: &str) -> String {
+    let mut plan: Vec<(char, usize)> = Vec::new();
+    for line in input.lines() {
+        let (v, d) = line.split_once('#').unwrap().1.split_at(5);
+        plan.push((
+            ['R', 'D', 'L', 'U'][d.chars().next().unwrap().to_digit(10).unwrap() as usize],
+            usize::from_str_radix(&v, 16).unwrap(),
+        ));
     }
-
-    fn part1(&mut self) -> String {
-        area(&self.plan).to_string()
-    }
-
-    fn part2(&mut self) -> String {
-        area(&self.correct_plan).to_string()
-    }
+    area(&plan).to_string()
 }
 
 fn area(plan: &Vec<(char, usize)>) -> i64 {
@@ -48,16 +29,13 @@ fn area(plan: &Vec<(char, usize)>) -> i64 {
     let mut y = 0i64;
 
     for &(d, v) in plan {
-        let d = match d {
-            'R' => (1, 0),
-            'D' => (0, 1),
-            'L' => (-1, 0),
-            'U' => (0, -1),
+        match d {
+            'R' => x += v as i64,
+            'D' => y += v as i64,
+            'L' => x -= v as i64,
+            'U' => y -= v as i64,
             _ => panic!(),
         };
-
-        x += d.0 * v as i64;
-        y += d.1 * v as i64;
 
         vertices.push((x, y));
     }
