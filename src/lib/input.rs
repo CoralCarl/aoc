@@ -33,8 +33,12 @@ fn download_input(token: &str, year: usize, day: usize) -> String {
         .unwrap()
         .text()
         .expect(format!("Could not download input {year}-{day}").as_str());
-    if response == "Puzzle inputs differ by user.  Please log in to get your puzzle input.\n" {
+    if response.starts_with("Puzzle inputs differ by user.") {
         panic!("Session token invalid.");
+    } else if response
+        .starts_with("Please don't repeatedly request this endpoint before it unlocks!")
+    {
+        panic!("Input not yet available.");
     }
     response
 }

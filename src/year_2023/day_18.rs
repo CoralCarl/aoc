@@ -1,6 +1,6 @@
-pub fn part1(input: &str) -> String {
+pub fn part1(input: &[u8]) -> String {
     let mut plan: Vec<(char, usize)> = Vec::new();
-    for line in input.lines() {
+    for line in std::str::from_utf8(input).unwrap().lines() {
         let mut spl = line.split_whitespace();
         plan.push((
             spl.next().unwrap().chars().next().unwrap(),
@@ -10,9 +10,9 @@ pub fn part1(input: &str) -> String {
     area(&plan).to_string()
 }
 
-pub fn part2(input: &str) -> String {
+pub fn part2(input: &[u8]) -> String {
     let mut plan: Vec<(char, usize)> = Vec::new();
-    for line in input.lines() {
+    for line in std::str::from_utf8(input).unwrap().lines() {
         let (v, d) = line.split_once('#').unwrap().1.split_at(5);
         plan.push((
             ['R', 'D', 'L', 'U'][d.chars().next().unwrap().to_digit(10).unwrap() as usize],

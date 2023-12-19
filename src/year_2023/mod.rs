@@ -18,13 +18,13 @@ use std::collections::HashMap;
 // mod day_16;
 // mod day_17;
 mod day_18;
-// mod day_19;
+mod day_19;
 
-type Solution = (Box<dyn Fn(&str) -> String>, Box<dyn Fn(&str) -> String>);
+type Solution = (Box<dyn Fn(&[u8]) -> String>, Box<dyn Fn(&[u8]) -> String>);
 
 pub fn days() -> HashMap<usize, Solution> {
     let mut days: HashMap<usize, Solution> = HashMap::new();
     days.insert(18, (Box::new(day_18::part1), Box::new(day_18::part2)));
-    // days.insert(19, (Box::new(day_19::part1), Box::new(day_19::part2)));
+    days.insert(19, (Box::new(day_19::part1), Box::new(day_19::part2)));
     days
 }
