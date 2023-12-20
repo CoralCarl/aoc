@@ -19,14 +19,13 @@ pub fn read_input(year: usize, day: usize) -> String {
             raw
         }
     }
-    .trim_end()
     .to_string()
 }
 
 fn download_input(token: &str, year: usize, day: usize) -> String {
     let client = reqwest::blocking::Client::new();
     let url = format!("https://adventofcode.com/{year}/day/{day}/input");
-    let response = client
+    let mut response = client
         .get(url)
         .header("Cookie", format!("session={token}"))
         .send()
@@ -39,6 +38,9 @@ fn download_input(token: &str, year: usize, day: usize) -> String {
         .starts_with("Please don't repeatedly request this endpoint before it unlocks!")
     {
         panic!("Input not yet available.");
+    }
+    if !response.ends_with('\n') {
+        response.push('\n');
     }
     response
 }

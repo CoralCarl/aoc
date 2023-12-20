@@ -25,10 +25,12 @@ fn main() {
             "-d" => {
                 input = iargs.next().expect("format: -d 'inputdata'");
             }
-            "-t" => {
-                input =
-                    String::from_utf8(std::fs::read("test.txt").expect("unknown file"))
-                        .unwrap();
+            "-i" => {
+                input = String::from_utf8(
+                    std::fs::read(iargs.next().expect("format: -i 'filepath'"))
+                        .expect("unknown file"),
+                )
+                .unwrap();
             }
             _ => args.push(arg),
         }
