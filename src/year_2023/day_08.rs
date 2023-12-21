@@ -89,5 +89,3 @@ fn lcm(nums: Vec<usize>) -> usize {
     }
     a
 }
-
-
