@@ -20,6 +20,7 @@ mod day_06;
 mod day_18;
 mod day_19;
 mod day_20;
+mod day_21;
 
 type Solution = (Box<dyn Fn(&[u8]) -> String>, Box<dyn Fn(&[u8]) -> String>);
 
@@ -29,5 +30,6 @@ pub fn days() -> HashMap<usize, Solution> {
     days.insert(18, (Box::new(day_18::part1), Box::new(day_18::part2)));
     days.insert(19, (Box::new(day_19::part1), Box::new(day_19::part2)));
     days.insert(20, (Box::new(day_20::part1), Box::new(day_20::part2)));
+    days.insert(21, (Box::new(day_21::part1), Box::new(day_21::part2)));
     days
 }
