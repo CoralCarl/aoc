@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 struct Point {
     x: u16,
     y: u16,
