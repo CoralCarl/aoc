@@ -36,33 +36,6 @@ fn parse(input: &[u8]) -> Map {
 
 type Branches = HashMap<Point, HashMap<Point, u32>>;
 
-fn generate_paths(map: &Map) -> Branches {
-    let mut branches: Branches = HashMap::new();
-    let mut pos = map.start;
-    let mut d = (0, 1);
-    let mut l = 1; // maybe 0
-
-    while map.tiles[&pos] == b'.' {
-        for dn in [d, (d.1, -d.0), (-d.1, d.0)] {
-            let next = (pos.0 + dn.0, pos.1 + dn.1);
-            if map.tiles.contains_key(&next) {
-                pos.0 += dn.0;
-                pos.1 += dn.1;
-                d = dn;
-                break;
-            }
-        }
-        l += 1;
-    }
-    pos.0 += d.0;
-    pos.1 += d.1;
-
-    branches.entry(map.start).or_default().insert(pos, l);
-    branch(&map, &mut branches, pos);
-
-    branches
-}
-
 fn branch(map: &Map, branches: &mut Branches, start: (i16, i16)) {
     for (mut d, valid) in [
         ((1, 0), b'>'),
@@ -71,12 +44,20 @@ fn branch(map: &Map, branches: &mut Branches, start: (i16, i16)) {
         ((0, -1), b'^'),
     ] {
         let mut pos = (start.0 + d.0, start.1 + d.1);
-        if !map.tiles.contains_key(&pos) || map.tiles[&pos] != valid {
+        let mut l;
+        if !map.tiles.contains_key(&pos) {
             continue;
         }
-        pos.0 += d.0;
-        pos.1 += d.1;
-        let mut l = 3;
+        if start == map.start {
+            l = 2;
+        } else {
+            if map.tiles[&pos] != valid {
+                continue;
+            }
+            pos.0 += d.0;
+            pos.1 += d.1;
+            l = 3;
+        }
 
         'walk: while map.tiles[&pos] == b'.' {
             for dn in [d, (d.1, -d.0), (-d.1, d.0)] {
@@ -131,18 +112,24 @@ fn longest_hike(
 
 pub fn part1(input: &[u8]) -> String {
     let map = parse(input);
-    let branches = generate_paths(&map);
-    let best = longest_hike(&map.start, &map.end, &branches, HashSet::new(), 0);
+    let mut branches = Branches::new();
+    branch(&map, &mut branches, (1, 0));
+
+    let best = longest_hike(&map.start, &map.end, &mut branches, HashSet::new(), 0);
     best.to_string()
 }
 
 pub fn part2(input: &[u8]) -> String {
     let map = parse(input);
-    let branches = generate_paths(&map);
+    let mut branches = Branches::new();
+    branch(&map, &mut branches, (1, 0));
     let mut new_branches = branches.clone();
     for (start, ends) in &branches {
         for (end, length) in ends {
-            new_branches.entry(*end).or_default().insert(*start, *length);
+            new_branches
+                .entry(*end)
+                .or_default()
+                .insert(*start, *length);
         }
     }
     let best = longest_hike(&map.start, &map.end, &new_branches, HashSet::new(), 0);
